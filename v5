@@ -1,0 +1,743 @@
+using System;
+using System.IO;
+
+namespace Database
+{
+        class program
+    {
+        // bits
+
+        static int Bits(int Age, char gender, char state, char grade)
+        {
+            int date;
+
+                date = Age << 4;
+
+            if (gender == 'F')
+            {
+                date |= 8;
+            }
+
+            if (state == 'C')
+            {
+                date |= 4;
+            }
+
+            if (grade == 'M')
+            {
+                date |= 1;
+            }
+            else if (grade == 'G')
+            {
+                date |= 2;
+            }
+            else if (grade == 'P')
+            {
+                date |= 3;
+            }
+
+            return date;
+        }
+
+        static void ReadBits(int date, out int Age, out char gender, out char state, out char grade)
+        {
+            Age = date >> 4;
+
+            date &= 15;
+            if ((date >> 3) == 1)
+            {
+                gender = 'F';
+            }
+
+            else
+            {
+                gender = 'M';
+            }
+
+            date &= 7;
+
+            if ((date >> 2) == 1)
+            {
+                state = 'C';
+            }
+            else
+            {
+                state = 'S';
+            }
+
+            date &= 3;
+
+            if (date == 0)
+            {
+                grade = 'I';
+            }
+            else if (date == 1)
+            {
+                grade = 'M';
+            }
+            else if (date == 2)
+            {
+                grade = 'G';
+            }
+            else
+            {
+                grade = 'P';
+            }
+
+            //MAIN
+
+        }
+            static void Main(string[] args)
+        {
+                start:
+
+                // Declarations
+                char  gender = 'n', state = 'n', grade = 'n';
+                long id;
+                string name;
+                string Aname;
+                int Age, date;
+                string choice;
+                byte YN;
+                string p1, p2;
+                decimal change;
+
+                bool found;
+                found = false;
+                string chain;
+                char[] split = {','};
+                string[] Campus = new string[4];
+
+                StreamWriter writer;
+                StreamReader reader;
+                
+                
+                //Main
+                System.Console.WriteLine("What do you want to do?");
+                System.Console.WriteLine("1: Register");
+                System.Console.WriteLine("2: List");
+                System.Console.WriteLine("3: search");
+                System.Console.WriteLine("4: Modify");
+                System.Console.WriteLine("5: Delete");
+                YN = Convert.ToByte(System.Console.ReadLine());
+                switch(YN)
+                {   //Register
+                    case 1:
+                        
+                        System.Console.Clear();
+
+                        ID:
+                        System.Console.WriteLine("");
+                        System.Console.WriteLine("Write your ID");
+                        id = idR();
+
+                        Name:
+                        System.Console.WriteLine("");
+                        System.Console.WriteLine("Write your name");
+                        name = System.Console.ReadLine();
+
+                        Lastname:
+                        System.Console.WriteLine("");
+                        System.Console.WriteLine("Write your lastname");
+                        Aname = System.Console.ReadLine();
+                        
+                        Age:
+                       /* System.Console.WriteLine("");
+                        System.Console.WriteLine("How old are you?");
+                        Age = AgeR();*/
+
+                        Console.Write("Edad: ");
+						Age = Convert.ToInt32(Console.ReadLine().ToUpper());
+						Console.WriteLine();
+
+						Console.Write("Genero(F/M): ");
+						gender = Convert.ToChar(Console.ReadLine().ToUpper());
+						Console.WriteLine();
+
+						Console.Write("Estado(S/C): ");
+						state = Convert.ToChar(Console.ReadLine().ToUpper());
+						Console.WriteLine();
+
+						Console.Write("Grado(I/M/G/P): ");
+						grade = Convert.ToChar(Console.ReadLine().ToUpper());
+						Console.WriteLine();
+
+						Console.WriteLine(Bits(Age, gender, state, grade));
+						Console.WriteLine();
+
+
+						date = Bits(Age, gender, state, grade);
+
+						ReadBits(date, out Age, out gender, out state, out grade);
+
+						Console.WriteLine("Edad: {0}", Age);
+						Console.WriteLine("Genero: {0}", gender);
+						Console.WriteLine("Estado: {0}", state);
+						Console.WriteLine("Grado: {0}", grade);
+
+                        Console.Write("Ahorros: ");
+						change = ReadMoney();
+						Console.WriteLine();
+
+						password:
+						Console.Write("Contraseña: ");
+						p1 = ReadPassword();
+						Console.WriteLine();
+
+						Console.Write("confirmar Contraseña: ");
+						p2 = ReadPassword();
+						Console.WriteLine();
+
+                        if (p1 == p2)
+						{
+							Console.WriteLine("La Informacion registrada es: " + id + "," + name + "," + Aname + "," + Age + "," + gender + "," + state + "," + grade + "," + change + "," + p1 + "\n \n");
+						}
+						else
+						{
+							goto password;
+						}
+
+
+                        choice:
+                        System.Console.WriteLine();
+                        System.Console.WriteLine("Do you want to save? Y/N");
+                        choice = System.Console.ReadLine();
+
+                        if (choice == "Y" || choice == "y")
+                        {
+                            //txt save
+
+                            using(Stream sf = new FileStream("C:/Users/KingTarot/Desktop/Programación/Codes/DataBase.csv", FileMode.Append, FileAccess.Write))
+                            {
+                                using(StreamWriter output = new StreamWriter(sf))
+                                {
+                                output.WriteLine(id.ToString() + ',' + name + ',' + Aname + ',' + Age + ',' + gender + ',' + state + ',' + grade + ',' + change + ',' + p1 + "");
+                                output.Close();
+                                } 
+                            }
+                        }
+                        else if(choice == "N" || choice == "n")
+                        {
+                            System.Console.WriteLine("Where do you want to go?");
+                            System.Console.WriteLine("1: ID");
+                            System.Console.WriteLine("2: Name");
+                            System.Console.WriteLine("3: LastName");
+                            System.Console.WriteLine("4: Age");
+
+                            switch(YN)
+                            {
+                                case 1:
+                                    goto ID;
+                                case 2:
+                                    goto Name;
+                                case 3:
+                                    goto Lastname;
+                                case 4:
+                                    goto Age;
+                            }
+                        }
+                        else 
+                        {
+                            System.Console.WriteLine("The choise is invalid");
+                            System.Console.Clear();
+                            goto choice;
+                        }
+                        Add:
+                        System.Console.WriteLine("You want to add another person? Y/N");
+                        choice = System.Console.ReadLine();
+
+                        if(choice == "Y" || choice == "y")
+                        {
+                            System.Console.Clear();
+                            goto ID;
+                        }
+                        else if(choice == "N" || choice == "n")
+                        {
+                            System.Console.Clear();
+                            goto start;
+                        }
+                        else
+                        {
+                            System.Console.WriteLine("The choice is invalid");
+                            System.Console.ReadKey();
+                            System.Console.Clear();
+                            goto Add;
+                        }
+
+                        case 2:
+                            //List
+                            reader = File.OpenText("DataBase.csv");
+                            System.Console.Clear();
+                            while(!reader.EndOfStream)
+                            {
+                                System.Console.WriteLine(reader.ReadLine());
+                            }
+                            System.Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
+                            System.Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
+                            System.Console.WriteLine("");
+                            System.Console.WriteLine("Do you wish to go back to start? Y/N");
+                            choice = System.Console.ReadLine();
+
+                            Confirm:
+                             if(choice == "Y" || choice == "y")
+                        {
+                            System.Console.Clear();
+                            goto start;
+                        }
+                        else if(choice == "N" || choice == "n")
+                        {
+                            System.Console.Clear();
+                            System.Console.WriteLine("Have a good day");
+                            System.Console.ReadKey();
+                        }
+                        else
+                        {
+                            System.Console.WriteLine("The choice is invalid");
+                            System.Console.ReadKey();
+                            System.Console.Clear();
+                            goto Confirm;
+                        }
+                        reader.Close();
+
+
+                            break;
+
+                        case 3:
+                            //search by ID
+
+
+
+                            try 
+                            {
+                                reader = File.OpenText("DataBase.csv");
+                                writer = File.CreateText("temp.csv");
+                                System.Console.Clear();
+                                System.Console.WriteLine("Write the ID that you search");
+                                id = long.Parse(System.Console.ReadLine());
+
+                                chain = reader.ReadLine();
+                                while(found == false && chain != null)
+                                {
+                                    Campus = chain.Split(split);
+
+                                    if(Campus[0].Trim().Equals(id))
+                                    {
+                                        System.Console.WriteLine("ID : " + Campus[0].Trim());
+                                        System.Console.WriteLine("Name : " + Campus[1].Trim());
+                                        System.Console.WriteLine("LastName : " + Campus[2].Trim());
+                                        System.Console.WriteLine("Age : " + Campus[3].Trim());
+                                        found = true;
+
+                                        System.Console.WriteLine("Do you want to go to start Y/N");
+                                        choice = System.Console.ReadLine();
+                                        choice = choice.ToUpper();
+                                    
+                                        Confirm3:
+                                        if(choice == "Y")
+                                            {
+                                                System.Console.Clear();
+                                                goto start;
+                                            }
+                                        else if(choice == "N")
+                                        {
+                                            System.Console.Clear();
+                                            System.Console.WriteLine("Have a good day");
+                                            System.Console.ReadKey();
+                                        }
+                                        else
+                                        {
+                                            System.Console.WriteLine("The choice is invalid");
+                                            System.Console.ReadKey();
+                                            System.Console.Clear();
+                                            goto Confirm3;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        chain = reader.ReadLine();
+                                    }
+                                reader.Close();
+                                writer.Close();
+                                }
+                                if(found == false)
+                                {
+                                    System.Console.WriteLine("This ID "+ id +" is not registered");
+                                    System.Console.ReadKey();
+                                    System.Console.Clear();
+
+                                    System.Console.WriteLine("Do you want to go to start Y/N");
+                                    choice = System.Console.ReadLine();
+                                    choice = choice.ToUpper();
+                                    
+                                Confirm2:
+                                if(choice == "Y")
+                                    {
+                                        System.Console.Clear();
+                                        goto start;
+                                    }
+                                else if(choice == "N")
+                                    {
+                                        System.Console.Clear();
+                                        System.Console.WriteLine("Have a good day");
+                                        System.Console.ReadKey();
+                                    }
+                                 else
+                                    {
+                                        System.Console.WriteLine("The choice is invalid");
+                                        System.Console.ReadKey();
+                                        System.Console.Clear();
+                                        goto Confirm2;
+                                    }
+                                }
+                            }
+
+
+                            catch(FileNotFoundException err)
+                            {
+                                System.Console.WriteLine("Error! " + err.Message);
+                            }
+
+                        break;
+
+                        case 4:
+                            try
+                            {
+                                System.Console.Clear();
+                                reader = File.OpenText("DataBase.csv");
+                                writer = File.CreateText("temp.csv");
+                                System.Console.WriteLine("What's the ID that you want to Modify?");
+                                id = long.Parse(System.Console.ReadLine());
+                                chain = reader.ReadLine();
+                                while(chain != null)
+                                {
+                                    Campus = chain.Split(split);
+                                    if(Campus[0].Trim().Equals(id))
+                                    {
+                                        found = true;
+                                        System.Console.Clear();
+                                        System.Console.WriteLine("");
+                                        System.Console.WriteLine("Found:");
+                                        System.Console.WriteLine("");
+                                        System.Console.WriteLine("***********************************************************");
+                                        System.Console.WriteLine("ID : " + Campus[0].Trim());
+                                        System.Console.WriteLine("Name : " + Campus[1].Trim());
+                                        System.Console.WriteLine("LastName : " + Campus[2].Trim());
+                                        System.Console.WriteLine("Age : " + Campus[3].Trim());
+                                        System.Console.WriteLine("***********************************************************");
+                                        System.Console.WriteLine("");
+                                        System.Console.WriteLine("Is that what you were looking for? Y/N");
+                                        choice = System.Console.ReadLine();
+                                        choice = choice.ToUpper();
+
+                                        if(choice == "Y")
+                                        {
+                                            System.Console.Clear();
+                                            System.Console.WriteLine("Write the news params:");
+                                            System.Console.WriteLine("");
+
+                                            System.Console.WriteLine("");
+                                            System.Console.WriteLine("Write your ID");
+                                            id = idR();
+
+                                            System.Console.WriteLine("");
+                                            System.Console.WriteLine("Write your name");
+                                            name = System.Console.ReadLine();
+
+                                            System.Console.WriteLine("");
+                                            System.Console.WriteLine("Write your lastname");
+                                            Aname = System.Console.ReadLine();
+                        
+
+                                            /*System.Console.WriteLine("");
+                                            System.Console.WriteLine("How old are you?");
+                                            Age = AgeR();*/
+
+                                            Console.Write("Edad: ");
+						                    Age = Convert.ToInt32(Console.ReadLine().ToUpper());
+						                    Console.WriteLine();
+
+						                    Console.Write("Genero(F/M): ");
+						                    gender = Convert.ToChar(Console.ReadLine().ToUpper());
+						                    Console.WriteLine();
+
+						                    Console.Write("Estado(S/C): ");
+						                    state = Convert.ToChar(Console.ReadLine().ToUpper());
+						                    Console.WriteLine();
+
+						                    Console.Write("Grado(I/M/G/P): ");
+						                    grade = Convert.ToChar(Console.ReadLine().ToUpper());
+						                    Console.WriteLine();
+
+						                    Console.WriteLine(Bits(Age, gender, state, grade));
+						                    Console.WriteLine();
+
+
+						                    date = Bits(Age, gender, state, grade);
+
+						                    ReadBits(date, out Age, out gender, out state, out grade);
+
+						                    Console.WriteLine("Edad: {0}", Age);
+						                    Console.WriteLine("Genero: {0}", gender);
+						                    Console.WriteLine("Estado: {0}", state);
+						                    Console.WriteLine("Grado: {0}", grade);
+
+                                            Console.Write("Ahorros: ");
+						                    change = ReadMoney();
+						                    Console.WriteLine();
+
+						                    
+						                    Console.Write("Contraseña: ");
+						                    p1 = ReadPassword();
+						                    Console.WriteLine();
+
+						                    Console.Write("confirmar Contraseña: ");
+						                    p2 = ReadPassword();
+						                    Console.WriteLine();
+
+                                            if (p1 == p2)
+						                        {
+							                        Console.WriteLine("La Informacion registrada es: " + id + "," + name + "," + Aname + "," + Age + "," + gender + "," + state + "," + grade + "," + change + "," + p1 + "\n \n");
+						                        }
+						                    else
+						                 
+
+
+                                            System.Console.WriteLine();
+                                            System.Console.WriteLine("Do you want to save? Y/N");
+                                            choice = System.Console.ReadLine();
+                                            choice = choice.ToUpper();
+                                            if(choice == "Y")
+                                            {
+                                                System.Console.Clear();
+                                                writer.WriteLine(id.ToString() + ',' + name + "," + Aname + "," + Age + "," + gender + "," + state + "," + grade + "," + change + "," + p1 + "");
+
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        writer.WriteLine(chain);
+                                    }
+                                    chain = reader.ReadLine();
+                                }   
+                                if(found == false)
+                                {
+                                    System.Console.WriteLine("This ID: " + id + "does not exist.");
+                                }
+                                else
+                                {
+                                    writer.Close();
+                                    reader.Close();
+                                    File.Delete("DataBase.csv");
+                                    File.Move("temp.csv","DataBase.csv");
+                                    System.Console.WriteLine("Modified");
+                                }
+                            }
+                            catch(FileNotFoundException fn)
+                            {
+                                System.Console.WriteLine("Error!" + fn.Message);
+                            }
+                            break;
+                        case 5:
+                            try
+                            {
+                                System.Console.Clear();
+                                reader = File.OpenText("DataBase.csv");
+                                writer = File.CreateText("temp.csv");
+                                System.Console.WriteLine("What's the ID that you want to delete?");
+                                id = long.Parse(System.Console.ReadLine());
+                                chain = reader.ReadLine();
+                                while(chain != null)
+                                {
+                                    Campus = chain.Split(split);
+                                    if(Campus[0].Trim().Equals(id))
+                                    {
+                                        found = true;
+                                    }
+                                    else
+                                    {
+                                        writer.WriteLine(chain);
+                                    }
+                                    chain = reader.ReadLine();
+
+
+                                }   
+                                if(found == false)
+                                {
+                                    System.Console.WriteLine("This ID: " + id + "does not exist.");
+                                }
+                                else
+                                {
+                                    writer.Close();
+                                    reader.Close();    
+                                    File.Delete("DataBase.csv");
+                                    File.Move("temp.csv","DataBase.csv");
+                                    System.Console.WriteLine("Deleted");
+                                }
+            
+                            }
+                            catch(FileNotFoundException fn)
+                            {
+                                System.Console.WriteLine("Error!" + fn.Message);
+                            }
+
+                            break;
+                }
+        }
+        static long idR()
+        {
+            System.Console.WriteLine("");
+            while (true)
+            {
+                string data = "";
+                ConsoleKey key;
+
+                do
+                {
+                    var keyinfo = Console.ReadKey(intercept: true);
+                    key = keyinfo.Key;
+
+                    int value;
+                    bool sucs = int.TryParse(keyinfo.KeyChar.ToString(), out value);
+
+                    if(key == ConsoleKey.Backspace && data.Length > 0)
+                    {
+                        System.Console.WriteLine("\b \b");
+                        data = data.Remove(data.Length - 1);
+                    }
+                    else if(!Char.IsControl(keyinfo.KeyChar)&& sucs)
+                    {
+                        System.Console.Write(keyinfo.KeyChar);
+                        data += keyinfo.KeyChar;
+                    }
+
+                } while(key!= ConsoleKey.Enter);
+                if(data == "")
+                {
+                    continue;
+                }
+                return long.Parse(data);
+            }
+        }
+
+               static int AgeR()
+        {
+            System.Console.WriteLine("");
+            while (true)
+            {
+                string data = "";
+                ConsoleKey key;
+
+                do
+                {
+                    var keyinfo = Console.ReadKey(intercept: true);
+                    key = keyinfo.Key;
+
+                    int value;
+                    bool sucs = int.TryParse(keyinfo.KeyChar.ToString(), out value);
+
+                    if(key == ConsoleKey.Backspace && data.Length > 0)
+                    {
+                        System.Console.WriteLine("\b \b");
+                        data = data.Remove(data.Length - 1);
+                    }
+                    else if(!Char.IsControl(keyinfo.KeyChar)&& sucs)
+                    {
+                        System.Console.Write(keyinfo.KeyChar);
+                        data += keyinfo.KeyChar;
+                    }
+
+                } while(key!= ConsoleKey.Enter);
+                if(data == "")
+                {
+                    continue;
+                }
+                return int.Parse(data);
+            }
+        }
+        static string ReadPassword()
+		{
+			Console.Write("");
+
+			while (true)
+			{
+				string password = "";
+				ConsoleKey key;
+
+				do
+				{
+					var keyInfo = Console.ReadKey(intercept: true);
+					key = keyInfo.Key;
+
+					if (key == ConsoleKey.Backspace && password.Length > 0)
+					{
+						Console.Write("\b \b");
+						password = password.Remove(password.Length - 1);
+					}
+					else if (!char.IsControl(keyInfo.KeyChar))
+					{
+						Console.Write("*");
+						password += keyInfo.KeyChar;
+					}
+
+
+				} while (key != ConsoleKey.Enter);
+
+				if (password == "")
+				{
+					continue;
+				}
+
+				return password;
+			}
+
+		}
+        		static decimal ReadMoney()
+		{
+			Console.Write("");
+			while (true)
+			{
+				string data = "";
+				ConsoleKey key;
+				int c = 0;
+
+				do
+				{
+					var keyInfo = Console.ReadKey(intercept: true);
+					key = keyInfo.Key;
+
+					int value;
+					bool success = int.TryParse(keyInfo.KeyChar.ToString(), out value) || (keyInfo.KeyChar == '.' && c == 0);
+
+					if (keyInfo.KeyChar == '.')
+					{
+						c = 1;
+					}
+					else
+					{
+						c = 0;
+					}
+
+					if (key == ConsoleKey.Backspace && data.Length > 0)
+					{
+						Console.Write("\b \b");
+						data = data.Remove(data.Length - 1);
+					}
+					else if (!char.IsControl(keyInfo.KeyChar) && success)
+					{
+						Console.Write(keyInfo.KeyChar);
+						data += keyInfo.KeyChar;
+					}
+
+				} while (key != ConsoleKey.Enter);
+
+				if (data == "")
+				{
+					continue;
+				}
+
+				return decimal.Parse(data);
+            }
+        }
+    }
+}
